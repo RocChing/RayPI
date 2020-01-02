@@ -17,9 +17,9 @@ namespace RayPI.Repository.EFRepository.Repository
     /// <typeparam name="T"></typeparam>
     public class BaseRepository<T> : IBaseRepository<T> where T : EntityBase, new()
     {
-        private readonly MyDbContext _myDbContext;
+        private readonly RayDbContext _myDbContext;
 
-        public BaseRepository(MyDbContext myDbContext)
+        public BaseRepository(RayDbContext myDbContext)
         {
             _myDbContext = myDbContext;
         }

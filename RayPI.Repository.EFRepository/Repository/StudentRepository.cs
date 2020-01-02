@@ -6,7 +6,7 @@ namespace RayPI.Repository.EFRepository.Repository
 {
     public class StudentRepository : BaseRepository<StudentEntity>, IStudentRepository
     {
-        public StudentRepository(MyDbContext myDbContext) : base(myDbContext)
+        public StudentRepository(RayDbContext myDbContext) : base(myDbContext)
         { }
 
         public StudentEntity GetByName(string name)

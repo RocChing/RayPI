@@ -6,9 +6,7 @@ using System.Linq.Expressions;
 //
 using Microsoft.EntityFrameworkCore;
 //
-using RayPI.Treasury.Helpers;
 using RayPI.Domain.Entity;
-using RayPI.Infrastructure.Auth;
 using RayPI.Infrastructure.Auth.Operate;
 using RayPI.Infrastructure.Treasury.Extensions;
 using RayPI.Infrastructure.Treasury.Helpers;
@@ -16,14 +14,14 @@ using RayPI.Infrastructure.Treasury.Interfaces;
 
 namespace RayPI.Repository.EFRepository
 {
-    public class MyDbContext : DbContext
+    public class RayDbContext : DbContext
     {
         private readonly IOperateInfo _operateInfo;
-        public MyDbContext(DbContextOptions options)
+        public RayDbContext(DbContextOptions options)
             : base(options)
         {
         }
-        public MyDbContext(DbContextOptions options, IOperateInfo operateInfo)
+        public RayDbContext(DbContextOptions options, IOperateInfo operateInfo)
             : base(options)
         {
             _operateInfo = operateInfo;

@@ -9,7 +9,7 @@ using RayPI.Repository.EFRepository;
 
 namespace RayPI.Repository.EFRepository.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(RayDbContext))]
     [Migration("20190815091852_Init")]
     partial class Init
     {

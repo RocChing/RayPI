@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RayPI.Domain.Entity
+namespace RayPI.Domain.Entity.Identity
 {
     public class UserAccountEntity: EntityBase
     {
