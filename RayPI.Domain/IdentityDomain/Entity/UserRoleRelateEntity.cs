@@ -1,4 +1,6 @@
-﻿namespace RayPI.Domain.Entity.Identity
+﻿using RayPI.Domain.Entity;
+
+namespace RayPI.Domain.IdentityDomain.Entity
 {
     public class UserRoleRelateEntity : EntityBase
     {

@@ -12,7 +12,7 @@ namespace RayPI.Business.Di
         public static IServiceCollection AddBusiness(this IServiceCollection services)
         {
             Assembly repositoryAssembly = Assembly.GetExecutingAssembly();
-            services.AddAssemblyServices(repositoryAssembly, x => x.Name.EndsWith("Business"));
+            services.AddAssemblyServices(repositoryAssembly, x => x.Name.EndsWith("Business") || x.Name.EndsWith("AppService"));
             return services;
         }
     }

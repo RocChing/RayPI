@@ -168,6 +168,7 @@ namespace RayPI.Infrastructure.Auth.Jwt
         public JwtSecurityToken GetJwtSecurityToken(string tokenStr)
         {
             string token = tokenStr.Replace($"{JwtBearerDefaults.AuthenticationScheme} ", string.Empty);
+            if (string.IsNullOrWhiteSpace(token)) return null;
             var jwt = _jwtSecurityTokenHandler.ReadJwtToken(token);
             return jwt;
         }

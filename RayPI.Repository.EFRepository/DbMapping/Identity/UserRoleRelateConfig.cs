@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RayPI.Domain.Entity.Identity;
+using RayPI.Domain.IdentityDomain.Entity;
 
 namespace RayPI.Repository.EFRepository.DbMapping.Identity
 {

@@ -1,8 +1,9 @@
 ﻿using System;
+using RayPI.Domain.Entity;
 
-namespace RayPI.Domain.Entity.Identity
+namespace RayPI.Domain.IdentityDomain.Entity
 {
-    public class UserAccountEntity: EntityBase
+    public class UserAccountEntity : EntityBase
     {
         /// <summary>
         /// 用户Id
@@ -17,7 +18,7 @@ namespace RayPI.Domain.Entity.Identity
         /// <summary>
         /// 密码
         /// </summary>
-        public string Password { get; set; }
+        public string PwdHash { get; set; }
 
         /// <summary>
         /// 姓名

@@ -80,7 +80,7 @@ namespace RayPI.Infrastructure.Auth
             #endregion
 
             //注册IOperateInfo
-            //services.AddScoped<IOperateInfo, OperateInfo>();
+            services.AddScoped<IOperateInfo, OperateInfo>();
             services.AddSingleton<IAuthService, AuthService>();
 
             return services;

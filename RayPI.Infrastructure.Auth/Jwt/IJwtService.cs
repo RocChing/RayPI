@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using RayPI.Infrastructure.Auth.Models;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RayPI.Infrastructure.Auth.Jwt
 {
@@ -26,5 +27,7 @@ namespace RayPI.Infrastructure.Auth.Jwt
         /// <param name="jwtStr"></param>
         /// <returns></returns>
         TokenModel SerializeJWT(string jwtStr);
+
+        JwtSecurityToken GetJwtSecurityToken(string tokenStr);
     }
 }

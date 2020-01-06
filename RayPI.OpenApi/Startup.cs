@@ -25,6 +25,7 @@ using RayPI.Infrastructure.Security.Models;
 using RayPI.Infrastructure.Security.Services;
 using RayPI.Infrastructure.Security;
 using RayPI.Infrastructure.Auth;
+using RayPI.Domain;
 
 namespace RayPI.OpenApi
 {
@@ -94,6 +95,8 @@ namespace RayPI.OpenApi
             //注册仓储
             string connStr = allConfig.ConnectionStringsModel.SqlServerDatabase;
             services.AddRepository(connStr);
+
+            services.AddDomainService();
 
             //注册业务逻辑
             services.AddBusiness();

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 //本地项目包
 using RayPI.Infrastructure.Auth.Models;
 using RayPI.Infrastructure.Auth.Jwt;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 
 namespace RayPI.Infrastructure.Auth.Operate
 {
@@ -24,11 +27,12 @@ namespace RayPI.Infrastructure.Auth.Operate
         /// <summary>
         /// 令牌字符串
         /// </summary>
-        public string TokenStr => _httpContext.Request.Headers["Authorization"].ToString().Substring("Bearer ".Length).Trim();
-        /// <summary>
-        /// 令牌
-        /// </summary>
-        public TokenModel TokenModel => _jwtService.SerializeJWT(TokenStr);
+        public string TokenStr => _httpContext.Request.Headers["Authorization"].ToString();
 
+
+        private JwtSecurityToken jwtSecurityToken => _jwtService.GetJwtSecurityToken(TokenStr);
+
+        public string Uname => jwtSecurityToken?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value ?? "";
+        public long Uid => long.TryParse(jwtSecurityToken?.Subject, out long uid) ? uid : -1L;
     }
 }

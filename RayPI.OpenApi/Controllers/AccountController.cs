@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RayPI.Business.Business;
+using RayPI.Business.Dto;
 using RayPI.Infrastructure.Auth;
 using RayPI.Infrastructure.Auth.Jwt;
 using RayPI.Infrastructure.Config;
@@ -20,16 +22,27 @@ namespace RayPI.OpenApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IdentityAppService _identityAppService;
         private readonly IAuthService _authService;
-        private readonly IJwtService _jwtService;
-        private readonly AllConfigModel _allConfigModel;
 
-        public AccountController(IAuthService authService, IJwtService jwtService, AllConfigModel allConfigModel)
+
+        public AccountController(IdentityAppService identityAppService, IAuthService authService)
         {
+            _identityAppService = identityAppService;
             _authService = authService;
-            _jwtService = jwtService;
-            _allConfigModel = allConfigModel;
         }
+
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="request"></param>
+        [HttpPost]
+        public bool Register(RegisterDto request)
+        {
+            _identityAppService.Register(request);
+            return true;
+        }
+
         /// <summary>
         /// 登录获取token
         /// </summary>
