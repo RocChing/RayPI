@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RayPI.Business.Business;
 using RayPI.Business.Dto;
+using RayPI.Domain.IdentityDomain;
 using RayPI.Infrastructure.Auth;
 using RayPI.Infrastructure.Auth.Jwt;
 using RayPI.Infrastructure.Config;
@@ -23,12 +24,16 @@ namespace RayPI.OpenApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IdentityAppService _identityAppService;
+        private readonly IIdentityDomainService _identityDomainService;
         private readonly IAuthService _authService;
 
 
-        public AccountController(IdentityAppService identityAppService, IAuthService authService)
+        public AccountController(IdentityAppService identityAppService,
+            IIdentityDomainService identityDomainService,
+            IAuthService authService)
         {
             _identityAppService = identityAppService;
+            _identityDomainService = identityDomainService;
             _authService = authService;
         }
 
@@ -52,24 +57,21 @@ namespace RayPI.OpenApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("Token")]
-        public JsonResult Login(string userName = "StuAdmin", string pwd = "123456")
+        public JsonResult Login(string userName = "admin", string pwd = "123456")
         {
-            List<string> GetRoleCodeList()
-            {
-                switch (userName)
-                {
-                    case "Admin": return new List<string> { "Admin" };
-                    case "StuAdmin": return new List<string> { "StudentAdmin" };
-                    case "TeacherAdmin": return new List<string> { "TeacherAdmin" };
-                    case "Test":
-                        return new List<string> { "StuAdmin", "TeacherAdmin" };
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            string tokenStr = _authService.GetToken(userName, GetRoleCodeList());
+            long uid = _identityDomainService.Login(userName, pwd);
+
+            List<string> roleList = _identityDomainService.GetRolesByUid(uid);
+            string tokenStr = _authService.GetToken(userName, roleList);
 
             return new JsonResult(tokenStr);
+        }
+
+        public bool SetPermissions(long roleId, List<Permission> permissions)
+        {
+            List<string> permissionCodes = permissions.Select(x => $"{x.ResourceCode}_{x.OperateCode}").ToList();
+            _identityDomainService.SetPermissions(roleId, permissionCodes);
+            return true;
         }
     }
 }

@@ -44,5 +44,6 @@ namespace RayPI.Domain.IdentityDomain.Entity
         /// 是否禁用 true=是，false=否
         /// </summary>
         public bool IsDisable { get; set; }
+
     }
 }
