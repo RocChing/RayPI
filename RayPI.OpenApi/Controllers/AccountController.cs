@@ -73,5 +73,10 @@ namespace RayPI.OpenApi.Controllers
             _identityDomainService.SetPermissions(roleId, permissionCodes);
             return true;
         }
+
+        public UserInfoDto GetUserInfo(long uid)
+        {
+
+        }
     }
 }
