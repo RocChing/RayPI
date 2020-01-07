@@ -15,6 +15,6 @@ namespace RayPI.Infrastructure.Auth
         public ResourceEnum ResourceEnum => Enum.Parse<ResourceEnum>(ResourceCode);
         public string OperateCode { get; set; }
         public string ResourceCode { get; set; }
-
+        public string PermissionCode => $"{ResourceCode}_{OperateCode}";
     }
 }

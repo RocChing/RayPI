@@ -22,6 +22,7 @@ namespace RayPI.Business.Dto
 
     public class RoleDto
     {
+        public long RoleId { get; set; }
         /// <summary>
         /// 角色编码
         /// </summary>

@@ -10,7 +10,9 @@ namespace RayPI.Domain.IdentityDomain
         void Register(UserAccountEntity userAccountEntity);
 
         long Login(string userName, string pwdHash);
-        List<string> GetRolesByUid(long id);
+        List<RoleEntity> GetRolesByUid(long id);
         void SetPermissions(long roleId, List<string> permissionCodes);
+        List<string> GetPermissionsByRoleCodes(string[] roleIds);
+        void DeleteUser(long uid);
     }
 }

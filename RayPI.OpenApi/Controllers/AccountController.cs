@@ -13,6 +13,7 @@ using RayPI.Infrastructure.Auth.Jwt;
 using RayPI.Infrastructure.Config;
 using RayPI.Infrastructure.Security.Models;
 using RayPI.Infrastructure.Security.Services;
+using RayPI.Infrastructure.Treasury.Models;
 
 namespace RayPI.OpenApi.Controllers
 {
@@ -51,9 +52,8 @@ namespace RayPI.OpenApi.Controllers
         /// <summary>
         /// 登录获取token
         /// </summary>
-        /// <param name="userCode"></param>
+        /// <param name="userName"></param>
         /// <param name="pwd"></param>
-        /// <param name="roleName"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("Token")]
@@ -61,22 +61,63 @@ namespace RayPI.OpenApi.Controllers
         {
             long uid = _identityDomainService.Login(userName, pwd);
 
-            List<string> roleList = _identityDomainService.GetRolesByUid(uid);
-            string tokenStr = _authService.GetToken(userName, roleList);
+            List<string> roleCodeList = _identityDomainService.GetRolesByUid(uid).Select(x => x.Code).ToList();
+            string tokenStr = _authService.GetToken(userName, roleCodeList);
 
             return new JsonResult(tokenStr);
         }
 
+        /// <summary>
+        /// 为角色赋权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="permissions"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Permission")]
         public bool SetPermissions(long roleId, List<Permission> permissions)
         {
-            List<string> permissionCodes = permissions.Select(x => $"{x.ResourceCode}_{x.OperateCode}").ToList();
+            List<string> permissionCodes = permissions.Select(x => x.PermissionCode).ToList();
             _identityDomainService.SetPermissions(roleId, permissionCodes);
             return true;
         }
 
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("UserInfos/{uid}")]
         public UserInfoDto GetUserInfo(long uid)
         {
+            return _identityAppService.GetUserInfo(uid);
+        }
 
+        /// <summary>
+        /// 获取用户分页
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("UserInfos")]
+        public PageResult<UserInfoDto> GetPageUserInfos(int pageIndex = 1, int pageSize = 10)
+        {
+            return _identityAppService.GetPageUserInfos(pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("Users")]
+        public bool DeleteUser(long uid)
+        {
+            _identityDomainService.DeleteUser(uid);
+            return true;
         }
     }
 }

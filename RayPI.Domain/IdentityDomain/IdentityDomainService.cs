@@ -46,25 +46,39 @@ namespace RayPI.Domain.IdentityDomain
 
         public long Login(string userName, string pwdHash)
         {
-            return _userAccountRepository.Find(x => x.UserName == userName && x.PwdHash == pwdHash)?.UserId ?? 0;
+            return _userAccountRepository.Find(x => x.UserName == userName && x.PwdHash == pwdHash)?.Id ?? 0;
         }
 
-        public List<string> GetRolesByUid(long id)
+        public List<RoleEntity> GetRolesByUid(long id)
         {
             var userRoles = _userRoleRelateRepository.GetAllMatching(x => x.UserId == id);
             var roleIds = userRoles.Select(x => x.RoleId);
             var roles = _roleRepository.GetAllMatching(x => roleIds.Contains(x.Id));
-            return roles.Select(x => x.Code).ToList();
+            return roles.ToList();
         }
 
         public void SetPermissions(long roleId, List<string> permissionCodes)
         {
+            string roleCode = _roleRepository.FindById(roleId).Code;
             var p = permissionCodes.Select(x => new RolePermissionRelateEntity
             {
-                RoleId = roleId,
+                RoleCode = roleCode,
                 PermissionCode = x
             });
             _rolePermissionRelateRepository.Add(p);
+        }
+
+        public List<string> GetPermissionsByRoleCodes(string[] roleCodes)
+        {
+            var rolePermissions = _rolePermissionRelateRepository.GetAllMatching(x => roleCodes.Contains(x.RoleCode));
+            return rolePermissions.Select(x => x.PermissionCode).ToList();
+        }
+
+        public void DeleteUser(long uid)
+        {
+            //todo:需要添加事务
+            _userAccountRepository.Delete(uid);
+            _userRoleRelateRepository.Delete(x => x.UserId == uid);
         }
     }
 }

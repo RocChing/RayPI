@@ -6,11 +6,6 @@ namespace RayPI.Domain.IdentityDomain.Entity
     public class UserAccountEntity : EntityBase
     {
         /// <summary>
-        /// 用户Id
-        /// </summary>
-        public long UserId { get; set; }
-
-        /// <summary>
         /// 用户名
         /// </summary>
         public string UserName { get; set; }
