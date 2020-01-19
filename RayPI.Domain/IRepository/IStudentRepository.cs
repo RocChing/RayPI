@@ -5,7 +5,7 @@ namespace RayPI.Domain.IRepository
     /// <summary>
     /// 
     /// </summary>
-    public interface IStudentRepository:IBaseRepository<StudentEntity>
+    public interface IStudentRepository : IBaseRepository<StudentEntity>
     {
         /// <summary>
         /// 

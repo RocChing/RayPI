@@ -14,7 +14,8 @@ namespace RayPI.Repository.EFRepository.Di
         public static IServiceCollection AddRepository(this IServiceCollection services, string connStr)
         {
             //注册数据库实例
-            services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connStr));
+            //services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connStr));
+            services.AddDbContext<MyDbContext>(options => options.UseSqlite(connStr));
 
             Assembly repositoryAssembly = Assembly.GetExecutingAssembly();
             services.AddAssemblyServices(repositoryAssembly, x => x.Name.EndsWith("Repository"));

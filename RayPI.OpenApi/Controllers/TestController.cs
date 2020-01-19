@@ -32,7 +32,7 @@ namespace RayPI.OpenApi.Controllers
     {
         private readonly IConfiguration _config;
         private readonly AllConfigModel _allConfigModel;
-        private readonly IJwtService _jwtService;
+        //private readonly IJwtService _jwtService;
 
         /// <summary>
         /// 
@@ -69,7 +69,8 @@ namespace RayPI.OpenApi.Controllers
                 Project = project,
                 TokenType = tokenType
             };
-            return _jwtService.IssueJwt(tm);
+            //return _jwtService.IssueJwt(tm);
+            return null;
         }
 
         /// <summary>

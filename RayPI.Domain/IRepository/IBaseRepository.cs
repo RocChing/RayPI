@@ -42,6 +42,7 @@ namespace RayPI.Domain.IRepository
 
         /// <summary>根据条件获取</summary>
         /// <param name="filter">查询条件</param>
+        /// <param name="exceptDeleted"></param>
         /// <returns>T.</returns>
         T Find(Expression<Func<T, bool>> filter, bool exceptDeleted = true);
 
@@ -64,20 +65,19 @@ namespace RayPI.Domain.IRepository
 
         #region 更新
         /// <summary>更新实体</summary>
-        /// <param name="item">The item.</param>
-        /// <param name="ignoreFileds">忽略部分字段更新</param>        
+        /// <param name="entity">The item.</param>      
         /// <exception cref="T:System.NotImplementedException"></exception>
         void Update(T entity);
 
         /// <summary>批量修改</summary>
-        /// <param name="tAggregateRoots">批量实体</param>
+        /// <param name="entityList">批量实体</param>
         void Update(IQueryable<T> entityList);
         #endregion
 
         #region 删除
         #region 物理移除
         /// <summary>物理移除</summary>
-        /// <param name="item">实体</param>
+        /// <param name="entity">实体</param>
         void Remove(T entity);
 
         /// <summary>批量物理移除</summary>
@@ -94,11 +94,11 @@ namespace RayPI.Domain.IRepository
 
         #region 逻辑删除(实质是更新：更新实体的IsDeleted字段和DeleteTime字段)
         /// <summary>逻辑删除</summary>
-        /// <param name="item">The item.</param>
+        /// <param name="entity">The item.</param>
         void Delete(T entity);
 
         /// <summary>逻辑删除</summary>
-        /// <param name="tAggregateRoots">批量实体</param>
+        /// <param name="entityList">批量实体</param>
         void Delete(IQueryable<T> entityList);
 
         /// <summary>逻辑删除</summary>

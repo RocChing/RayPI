@@ -25,6 +25,8 @@ using RayPI.Infrastructure.Security.Models;
 using RayPI.Infrastructure.Security.Services;
 using RayPI.Infrastructure.Security;
 using RayPI.Infrastructure.Auth;
+using BeetleX;
+using Microsoft.Extensions.Logging;
 
 namespace RayPI.OpenApi
 {
@@ -92,11 +94,14 @@ namespace RayPI.OpenApi
             services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
 
             //注册仓储
-            string connStr = allConfig.ConnectionStringsModel.SqlServerDatabase;
+            string connStr = allConfig.ConnectionStringsModel.SqliteDatabase;
             services.AddRepository(connStr);
 
             //注册业务逻辑
             services.AddBusiness();
+
+            services.AddScoped<IServerHandler, MTTCPServer>();
+            services.AddHostedService<MTBackgroundService>();
         }
 
         /// <summary>

@@ -122,7 +122,7 @@ namespace RayPI.Repository.EFRepository
         #endregion
 
         #region 添加
-        public long Add<TAggregateRoot>(TAggregateRoot entity) where TAggregateRoot : EntityBase
+        public new long Add<TAggregateRoot>(TAggregateRoot entity) where TAggregateRoot : EntityBase
         {
             if (entity == null) return -1;
             this.SetEntityBaseInfo(entity);
@@ -191,7 +191,7 @@ namespace RayPI.Repository.EFRepository
         /// <summary>物理删除一个对象</summary>
         /// <typeparam name="TAggregateRoot">The type of the t aggregate root.</typeparam>
         /// <param name="item">The item.</param>
-        public void Remove<TAggregateRoot>(TAggregateRoot item) where TAggregateRoot : EntityBase
+        public new void Remove<TAggregateRoot>(TAggregateRoot item) where TAggregateRoot : EntityBase
         {
             if (item == null) return;
             SetDeleted(item);

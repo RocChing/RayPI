@@ -16,5 +16,7 @@ namespace RayPI.Infrastructure.Config.ConfigModel
             _configSection = configuration.GetSection("ConnectionStrings");
         }
         public string SqlServerDatabase => _configSection.GetValue("SqlServerDatabase", "");
+
+        public string SqliteDatabase => _configSection.GetValue("SqliteDatabase", "");
     }
 }

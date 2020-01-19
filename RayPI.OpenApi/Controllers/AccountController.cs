@@ -33,9 +33,8 @@ namespace RayPI.OpenApi.Controllers
         /// <summary>
         /// 登录获取token
         /// </summary>
-        /// <param name="userCode"></param>
+        /// <param name="userName"></param>
         /// <param name="pwd"></param>
-        /// <param name="roleName"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("Token")]
@@ -53,7 +52,8 @@ namespace RayPI.OpenApi.Controllers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
+            };
+
             string tokenStr = _authService.GetToken(userName, GetRoleCodeList());
 
             return new JsonResult(tokenStr);

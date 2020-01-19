@@ -14,7 +14,7 @@
             };
             alert(JSON.stringify(tokenModel));
             $.ajax({
-                url: "http://localhost:3608/api/System/Token",
+                url: "http://localhost:36090/api/System/Token",
                 type: "get",
                 dataType: "json",
                 data: tokenModel,
@@ -33,7 +33,7 @@
         function Test() {
             var s = { name: $("#sname").val() };
             $.ajax({
-                url: "http://localhost:3608/api/Client/Student/GetByName",
+                url: "http://localhost:36090/api/Client/Student/GetByName",
                 type: "get",
                 dataType: "json",
                 data: s,
