@@ -2,68 +2,247 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
-    <script src="js/jquery-2.1.4.js"></script>
-    <script>
-        //获取jwt字符串
-        function GetToken() {
-            var tokenModel = {
-                id: $("#tid").val(),
-                name: $("#tname").val(),
-                sub: $("#tsub").val()
-            };
-            alert(JSON.stringify(tokenModel));
-            $.ajax({
-                url: "http://localhost:36090/api/System/Token",
-                type: "get",
-                dataType: "json",
-                data: tokenModel,
-                async: false,
-                success: function (d) {
-                    alert(JSON.stringify(d));
-                    $("#jwt").val(d);
-                },
-                error: function (d) {
-                    alert(JSON.stringify(d));
-                    $("#jwt").val(JSON.stringify(d));
-                }
-            });
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>订单列表</title>
+    <link href="libs/layui/css/layui.css" rel="stylesheet" />
+    <style type="text/css">
+        .layui-table-cell {
+            height: auto;
         }
-        //测试使用jwt调用接口
-        function Test() {
-            var s = { name: $("#sname").val() };
-            $.ajax({
-                url: "http://localhost:36090/api/Client/Student/GetByName",
-                type: "get",
-                dataType: "json",
-                data: s,
-                async: false,
-                headers: { "Authorization": "Bearer " + $("#jwt").val().trim() },
-                success: function (d) {
-                    alert(JSON.stringify(d));
-                    $("#sudent").val(JSON.stringify(d));
-                },
-                error: function (d) {
-                    alert(JSON.stringify(d));
-                    $("#sudent").val(JSON.stringify(d));
-                }
-            });
+
+        .layui-colla-title {
+            font-size: 20px;
         }
-    </script>
+
+        .layui-tab-title li {
+            font-size: 20px;
+        }
+
+        .layui-table td, .layui-table th {
+            font-size: 20px;
+        }
+
+        .cp {
+            font-size: 25px;
+            color: brown;
+        }
+
+        .ct {
+            float: right;
+        }
+    </style>
 </head>
 <body>
-    <div style="width:350px; margin:100px auto 0;">
-        I  D:<input type="text" id="tid" value="1" /><br />
-        Name:<input type="text" id="tname" value="张三" /><br />
-        Sub :<input type="text" id="tsub" value="Client" /><br />
-        <input type="button" value="获取Token" onclick="GetToken()" /><br />
-        <br />
-        <p>token:</p>
-        <textarea id="jwt" style="width:300px; height:200px; "></textarea>
-        <br />
-        学生姓名：<input type="text" id="sname" value="张三" /> <input type="button" value="点击查询" onclick="Test()" />
-        <br />
-        <textarea id="sudent" style="width:300px;height:200px;"></textarea>
+    <div class="layui-fluid">
+        <div class="layui-row">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">
+                        今日订单
+                        <span class="ct">当前时间: <span id="currentTime">获取中......</span></span>
+                    </h2>
+                    <div class="layui-colla-content layui-show">
+
+                        <div class="layui-tab layui-tab-brief" lay-filter="orderListTab">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" lay-id="1">待备餐</li>
+                                <li lay-id="2">备餐中</li>
+                                <li lay-id="3">已备餐</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <table lay-even lay-skin="nob" lay-size="lg" id="orderList_dbc"></table>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <table lay-even lay-skin="nob" lay-size="lg" id="orderList_bcz"></table>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <table lay-even lay-skin="nob" lay-size="lg" id="orderList_ybc"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <input type="button" value="测试语音" class="layui-btn" id="btnSpeak" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="libs/layui/layui.js"></script>
+    <script src="libs/js/index.js"></script>
+    <script type="text/javascript">
+        layui.use(['jquery', 'layer', 'table', 'element'], function () {
+            var layer = layui.layer, form = layui.form, element = layui.element, $ = layui.jquery, table = layui.table;
+
+            var socket = getSocket('ws://localhost:36090/mt?key=mtclient');
+            var table_data = {};
+            //监听Tab切换，以改变地址hash值
+            element.on('tab(orderListTab)', function () {
+                var layId = this.getAttribute('lay-id');
+                var tableId = '';
+                switch (layId) {
+                    case '1':
+                        tableId = 'orderList_dbc';
+                        break;
+                    case '2':
+                        tableId = 'orderList_bcz';
+                        break;
+                    case '3':
+                        tableId = 'orderList_ybc';
+                        break;
+                }
+                renderTable(tableId, layId);
+            });
+
+            setInterval(setCurrentTime, 1000);
+            renderTable('orderList_dbc', 1);
+
+            function speak(data_str) {
+                var texts = ['请注意, 收到 '];
+                var data = JSON.parse(data_str);
+                texts.push(data.OrderTypeName);
+                switch (data.OrderType) {
+                    case 1:
+                        texts.push('制作内容');
+                        break;
+                    case 2:
+                        texts.push('退菜内容');
+                        break;
+                }
+                texts.push('如下 \n');
+                var details = data.OrderDetails;
+                $.each(details, function (index, item) {
+                    texts.push(item.GoodsName + " ");
+                    texts.push(item.Number);
+                    texts.push(item.Unit);
+                    texts.push('\n');
+                });
+                var msg = new SpeechSynthesisUtterance(texts.join(''));
+                msg.volume = 100;
+                msg.rate = 1;
+                msg.pitch = 1.5;
+                window.speechSynthesis.speak(msg);
+            }
+
+            function renderTable(id, status) {
+                var options = {
+                    elem: '#' + id
+                    , skin: 'line'
+                    , url: '/api/order/getOrderList?status=' + status
+                    , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    , cols: [[
+                        { field: 'orderNo', width: 250, title: '订单编号' }
+                        , { field: 'orderTypeName', width: 100, title: '类型' }
+                        , { field: 'desktopName', width: 150, title: '桌号' }
+                        , { field: 'customerCount', width: 100, title: '人数' }
+                        //, { field: 'orderTime', title: '下单时间', width: '30%', minWidth: 100 } //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                        , {
+                            width: 300, title: '菜品',
+                            templet: function (row) {
+                                var html = [];
+                                var details = row.orderDetails;
+                                $.each(details, function (index, item) {
+                                    html.push('<div class="cp"><span>' + item.goodsName + '</span></div>');
+                                });
+                                return html.join('');
+                            }
+                        }
+                        , {
+                            width: 100, title: '数量',
+                            templet: function (row) {
+                                var html = [];
+                                var details = row.orderDetails;
+                                $.each(details, function (index, item) {
+                                    html.push('<div class="cp"><span>' + item.number + '</span><span>' + item.unit + '</span></div>');
+                                });
+                                return html.join('');
+                            }
+                        }
+                        , { field: 'orderTime', title: '下单时间' }
+                    ]],
+                    text: {
+                        none: '暂无订单信息'
+                    },
+                    parseData: function (res) {
+                        return {
+                            code: res.code === 200 ? 0 : 1,
+                            msg: res.msg,
+                            count: res.data.length,
+                            data: res.data
+                        };
+                    }
+                };
+                if (table_data[id]) {
+                    table.reload(id, options);
+                }
+                else {
+                    table_data[id] = true;
+                    table.render(options);
+                }
+            }
+
+            function request(url, data, callback, type) {
+                type = type || 'get';
+                $.ajax({
+                    url: url,
+                    type: type,
+                    dataType: "json",
+                    contentType: 'application/json;charset=UTF-8',
+                    data: data,
+                    success: function (d) {
+                        if (d.code === 200) {
+                            if (callback) {
+                                callback(d.data);
+                            }
+                        } else {
+                            alertError('服务器返回错误');
+                        }
+                    },
+                    error: function (d) {
+                        alertError(JSON.stringify(d));
+                    }
+                });
+            }
+
+            function setCurrentTime() {
+                var dt = new Date();
+                var dt_str = dt.format('yyyy-MM-dd hh:mm:ss');
+                $('#currentTime').text(dt_str);
+            }
+
+            function getSocket(url) {
+                var socket = new WebSocket(url);
+                socket.onopen = function () {
+                    switch (socket.readyState) {
+                        case WebSocket.OPEN:
+                            break;
+                        default:
+                            alertError('没有连接到服务器' + socket.readyState);
+                            break;
+                    }
+                };
+                socket.onerror = function () {
+                    alertError('没有连接到服务器');
+                };
+                socket.onmessage = function (event) {
+                    var data = event.data;
+                    speak(data);
+                    request('/api/order/add', data, function () {
+                        renderTable('orderList_dbc', 1);
+                    }, 'POST');
+                }
+                return socket;
+            }
+
+            function alertMsg(msg) {
+                layer.alert(msg, { icon: 1, title: '提示' });
+            }
+            function alertError(msg) {
+                layer.alert(msg, { icon: 2, title: '提示' });
+            }
+        });
+    </script>
 </body>
 </html>

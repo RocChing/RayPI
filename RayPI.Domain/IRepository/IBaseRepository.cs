@@ -7,12 +7,12 @@ using RayPI.Domain.Entity;
 using RayPI.Infrastructure.Treasury.Enums;
 using RayPI.Infrastructure.Treasury.Models;
 
-
 namespace RayPI.Domain.IRepository
 {
     public interface IBaseRepository<T> where T : EntityBase, new()
     {
         #region 查询
+
         /// <summary>查询所有匹配项</summary>
         /// <param name="filter">查询条件</param>
         /// <param name="exceptDeleted">排除被逻辑删除的</param>

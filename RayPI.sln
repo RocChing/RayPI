@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayPI.Infrastructure.Securi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeetleX", "BeetleX\BeetleX.csproj", "{6FCC002A-71F2-4635-9D58-590E0ACDE318}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayPI.Infrastructure.EventBus", "RayPI.Infrastructure.EventBus\RayPI.Infrastructure.EventBus.csproj", "{C61C8224-237A-48DD-9324-336C142FC690}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{6FCC002A-71F2-4635-9D58-590E0ACDE318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FCC002A-71F2-4635-9D58-590E0ACDE318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FCC002A-71F2-4635-9D58-590E0ACDE318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C61C8224-237A-48DD-9324-336C142FC690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C61C8224-237A-48DD-9324-336C142FC690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C61C8224-237A-48DD-9324-336C142FC690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C61C8224-237A-48DD-9324-336C142FC690}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{5E9E006B-2EC3-4823-B397-CABE461F9911} = {2D48BE4C-9D73-475F-8E71-0DFFAB0C5EC5}
 		{F297FAAF-C5FE-49BE-BF49-B9E8FE5CDB1B} = {2D48BE4C-9D73-475F-8E71-0DFFAB0C5EC5}
 		{6FCC002A-71F2-4635-9D58-590E0ACDE318} = {2D48BE4C-9D73-475F-8E71-0DFFAB0C5EC5}
+		{C61C8224-237A-48DD-9324-336C142FC690} = {2D48BE4C-9D73-475F-8E71-0DFFAB0C5EC5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {538DE4CA-FD39-4EC5-92B6-EF4B4D2B8F2D}

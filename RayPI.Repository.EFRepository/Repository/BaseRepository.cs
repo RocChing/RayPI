@@ -7,6 +7,7 @@ using RayPI.Domain.Entity;
 using RayPI.Domain.IRepository;
 using RayPI.Infrastructure.Treasury.Enums;
 using RayPI.Infrastructure.Treasury.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace RayPI.Repository.EFRepository.Repository
@@ -23,6 +24,8 @@ namespace RayPI.Repository.EFRepository.Repository
         {
             _myDbContext = myDbContext;
         }
+
+        public MyDbContext DbContext { get { return _myDbContext; } }
 
         #region 查询
         /// <summary>查询所有匹配项</summary>

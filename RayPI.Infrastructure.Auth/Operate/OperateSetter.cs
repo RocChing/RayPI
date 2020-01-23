@@ -12,7 +12,7 @@ namespace RayPI.Infrastructure.Auth.Operate
 
         public OperateSetter(IOperateInfo operateInfo)
         {
-            _tokenModel = operateInfo.TokenModel;
+            _tokenModel = operateInfo?.TokenModel;
         }
 
         /// <summary>创建人姓名</summary>

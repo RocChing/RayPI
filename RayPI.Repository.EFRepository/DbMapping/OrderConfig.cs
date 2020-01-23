@@ -19,6 +19,8 @@ namespace RayPI.Repository.EFRepository.DbMapping
             builder.Property(m => m.OrderType).IsRequired();
             builder.Property(m => m.OrderTypeName).HasMaxLength(100).IsRequired();
             builder.Property(m => m.Operator).HasMaxLength(100);
+            builder.Property(m => m.OrderTime).HasMaxLength(50);
+            builder.Property(m => m.Status).IsRequired();
             builder.HasMany(m => m.OrderDetails).WithOne().HasForeignKey(m => m.OrderId).IsRequired();
         }
     }

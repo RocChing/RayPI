@@ -9,6 +9,8 @@ using BeetleX.EventArgs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RayPI.Business;
+using RayPI.OpenApi.Socket;
 
 namespace RayPI.OpenApi
 {
@@ -18,14 +20,16 @@ namespace RayPI.OpenApi
         //private IServerHandler serverHandler;
         private ILogger<MTBackgroundService> logger;
         private IServiceProvider serviceProvider;
-        public MTBackgroundService(ILogger<MTBackgroundService> logger, IServiceProvider services)
+        private WebSocketConnectionManager webSocketConnectionManager;
+        public MTBackgroundService(ILogger<MTBackgroundService> logger, IServiceProvider services, WebSocketConnectionManager webSocketConnectionManager)
         {
             this.logger = logger;
             serverOptions = new ServerOptions();
             serverOptions.BufferSize = 102400;
             serverOptions.Port = 9100;
-            serverOptions.LogLevel = LogType.Info;
+            serverOptions.LogLevel = LogType.Warring;
             serviceProvider = services;
+            this.webSocketConnectionManager = webSocketConnectionManager;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -37,14 +41,22 @@ namespace RayPI.OpenApi
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var handler = scope.ServiceProvider.GetRequiredService<IServerHandler>();
-                IServer server = SocketFactory.CreateTcpServer(handler, null, serverOptions);
-                server.Open();
+            //using (var scope = serviceProvider.CreateScope())
+            //{
+            //    //var handler = scope.ServiceProvider.GetRequiredService<IServerHandler>();
+            //    var tcpLogger = scope.ServiceProvider.GetRequiredService<ILogger<MTTCPServer>>();
+            //    var orderBusiness = scope.ServiceProvider.GetRequiredService<OrderBusiness>();
+            //    var webSocketConnectionManager = scope.ServiceProvider.GetRequiredService<WebSocketConnectionManager>();
+            //    var handler = new MTTCPServer(tcpLogger, orderBusiness, webSocketConnectionManager);
+            //    IServer server = SocketFactory.CreateTcpServer(handler, null, serverOptions);
+            //    server.Open();
 
-                logger.LogWarning(server.ToString());
-            }
+            //    logger.LogWarning(server.ToString());
+            //}
+
+            var handler = new MTTCPServer(webSocketConnectionManager);
+            IServer server = SocketFactory.CreateTcpServer(handler, null, serverOptions);
+            server.Open();
             return Task.FromResult(0);
         }
 

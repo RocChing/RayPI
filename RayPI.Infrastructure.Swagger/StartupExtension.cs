@@ -9,6 +9,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 //三方包
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace RayPI.Infrastructure.Swagger
 {
@@ -19,13 +20,13 @@ namespace RayPI.Infrastructure.Swagger
             var apiInfo = new OpenApiInfo
             {
                 Version = "v3.0.0",
-                Title = "Ray WebAPI",
-                Description = "基于.NET Core3.0的接口框架",
+                Title = "WebAPI",
+                Description = "基于.NET Core3.1的接口框架",
                 Contact = new OpenApiContact
                 {
-                    Name = "RayWang",
-                    Email = "2271272653@qq.com",
-                    Url = new Uri("http://www.cnblogs.com/RayWang")
+                    Name = "Roc",
+                    Email = "chengpeng19925@163.com",
+                    Url = new Uri("https://github.com/rocching")
                 }
             };
             #region 注册Swagger服务
@@ -77,6 +78,8 @@ namespace RayPI.Infrastructure.Swagger
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v3/swagger.json", "ApiHelp V3");
+                c.DocExpansion(DocExpansion.None);
+                c.DefaultModelsExpandDepth(-1);
             });
         }
     }

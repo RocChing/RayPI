@@ -6,72 +6,79 @@ using System.Threading.Tasks;
 using BeetleX;
 using BeetleX.EventArgs;
 using Microsoft.Extensions.Logging;
+using RayPI.Domain.Common;
+using RayPI.Domain.Entity;
+using Newtonsoft.Json;
+using RayPI.Business;
+using RayPI.OpenApi.Socket;
+using System.Net.WebSockets;
+using System.Threading;
 
 namespace RayPI.OpenApi
 {
     public class MTTCPServer : ServerHandlerBase
     {
-        private Encoding encoding;
-        private ILogger<MTTCPServer> logger;
-        public MTTCPServer(ILogger<MTTCPServer> logger)
+        private WebSocketConnectionManager webSocketConnectionManager;
+        public MTTCPServer( WebSocketConnectionManager webSocketConnectionManager)
         {
-            this.logger = logger;
-            encoding = Encoding.GetEncoding("gbk");
+            this.webSocketConnectionManager = webSocketConnectionManager;
         }
 
         public override void SessionReceive(IServer server, SessionReceiveEventArgs e)
         {
-            byte[] bytes = new byte[e.Stream.Length];
-            e.Stream.Read(bytes, 0, (int)e.Stream.Length);
+            //byte[] bytes = new byte[e.Stream.Length];
+            //e.Stream.Read(bytes, 0, (int)e.Stream.Length);
 
-            var lines = GetLines(bytes);
-            foreach (var item in lines)
+            string str = e.Stream.ToPipeStream().ReadToEnd();
+            string[] strs = str.Split(',');
+            byte[] bytes = new byte[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                bytes[i] = byte.Parse(strs[i]);
+            }
+
+            Console.WriteLine("begin.........................");
+            foreach (var item in bytes)
             {
                 Console.Write(item);
+                Console.Write(",");
             }
-        }
+            Console.WriteLine();
+            Console.WriteLine("end.........................................");
 
-        private string GetLineString(List<byte> list)
-        {
-            return encoding.GetString(list.ToArray());
-        }
+            OrderEntity order = OrderFactory.Parse(bytes);
 
-        private List<string> GetLines(byte[] bytes)
-        {
-            int[] array1 = new int[] { 27, 29 };
-            int[] array2 = new int[] { 33, 76, 74, 100, 86, 32, 97, 105, 69, 66 };
-            int sp_value = 64;
-
-            List<string> reslut = new List<string>();
-            List<byte> list = new List<byte>();
-            for (int i = 0; i < bytes.Length; i++)
+            if (order != null)
             {
-                byte value = bytes[i];
-                if (array1.Contains(value))
+                if (order.IsValid())
                 {
-                    if (list.Count > 0)
+                    string json = JsonConvert.SerializeObject(order);
+                    Console.WriteLine(json);
+                    //orderBusiness.Add(order);
+                    var clients = webSocketConnectionManager.GetAll();
+                    if (clients != null)
                     {
-                        reslut.Add(GetLineString(list));
-                        list.Clear();
+                        Console.WriteLine($"the clients count is:{clients.Count}");
                     }
-                    int value_next = bytes[i + 1];
-                    if (value_next == sp_value)
+                    foreach (var item in clients)
                     {
-                        i += 1;
-                        continue;
-                    }
-                    if (array2.Contains(value_next))
-                    {
-                        i += 2;
-                        continue;
+                        SendMsg(item.Value, json);
                     }
                 }
                 else
                 {
-                    list.Add(value);
+                    Console.WriteLine("没有找到订单");
                 }
             }
-            return reslut;
+        }
+
+        private async Task SendMsg(WebSocket socket, string message)
+        {
+            Console.WriteLine($"the socket state is:{socket.State}");
+            if (socket.State != WebSocketState.Open)
+                return;
+            var bytes = Encoding.UTF8.GetBytes(message);
+            await socket.SendAsync(buffer: new ArraySegment<byte>(array: bytes, offset: 0, count: bytes.Length), messageType: WebSocketMessageType.Text, endOfMessage: true, cancellationToken: CancellationToken.None);
         }
     }
 }

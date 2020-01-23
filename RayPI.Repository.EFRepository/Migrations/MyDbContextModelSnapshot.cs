@@ -16,53 +16,10 @@ namespace RayPI.Repository.EFRepository.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.1");
 
-            modelBuilder.Entity("RayPI.Domain.Entity.BookEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("CreateId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CreateName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime?>("CreateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeleteTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
-
-                    b.Property<long?>("UpdateId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UpdateName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Writer")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Book");
-                });
-
             modelBuilder.Entity("RayPI.Domain.Entity.OrderDetailEntity", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("GoodsName")
@@ -123,6 +80,10 @@ namespace RayPI.Repository.EFRepository.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(100);
 
+                    b.Property<string>("OrderTime")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
                     b.Property<int>("OrderType")
                         .HasColumnType("INTEGER");
 
@@ -130,6 +91,9 @@ namespace RayPI.Repository.EFRepository.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasMaxLength(100);
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<long?>("UpdateId")
                         .HasColumnType("INTEGER");
@@ -144,91 +108,6 @@ namespace RayPI.Repository.EFRepository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("T_Order");
-                });
-
-            modelBuilder.Entity("RayPI.Domain.Entity.StudentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("ClassId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("CreateId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CreateName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime?>("CreateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeleteTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
-
-                    b.Property<long?>("UpdateId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UpdateName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Student");
-                });
-
-            modelBuilder.Entity("RayPI.Domain.Entity.TeacherEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("CreateId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CreateName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime?>("CreateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeleteTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
-
-                    b.Property<long?>("UpdateId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UpdateName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teacher");
                 });
 
             modelBuilder.Entity("RayPI.Domain.Entity.OrderDetailEntity", b =>

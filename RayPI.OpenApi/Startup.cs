@@ -27,6 +27,8 @@ using RayPI.Infrastructure.Security;
 using RayPI.Infrastructure.Auth;
 using BeetleX;
 using Microsoft.Extensions.Logging;
+using System.Net.WebSockets;
+using RayPI.OpenApi.Socket;
 
 namespace RayPI.OpenApi
 {
@@ -100,6 +102,8 @@ namespace RayPI.OpenApi
             //注册业务逻辑
             services.AddBusiness();
 
+            services.AddWebSocketManager();
+
             services.AddScoped<IServerHandler, MTTCPServer>();
             services.AddHostedService<MTBackgroundService>();
         }
@@ -129,12 +133,20 @@ namespace RayPI.OpenApi
 
             app.UseSwaggerService();
 
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+                ReceiveBufferSize = 4 * 1024
+            };
+            app.UseWebSockets(webSocketOptions);
+        
+            app.MapWebSocketManager("/mt", app.ApplicationServices.GetService<MTWebSocketHandler>());
+
             //app.UseMvc();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
         }
-
     }
 }

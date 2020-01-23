@@ -6,7 +6,7 @@ using RayPI.Domain.Entity;
 using RayPI.Domain.IRepository;
 using RayPI.Infrastructure.Treasury.Models;
 
-namespace RayPI.Bussiness
+namespace RayPI.Business
 {
     public class TeacherBusiness
     {

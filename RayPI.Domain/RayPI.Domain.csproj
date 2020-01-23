@@ -10,11 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RayPI.Infrastructure.Treasury\RayPI.Infrastructure.Treasury.csproj" />
+    <Compile Remove="DomainService\**" />
+    <EmbeddedResource Remove="DomainService\**" />
+    <None Remove="DomainService\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DomainService\" />
+    <ProjectReference Include="..\RayPI.Infrastructure.Treasury\RayPI.Infrastructure.Treasury.csproj" />
   </ItemGroup>
 
 </Project>

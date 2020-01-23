@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 //本地项目包
-using RayPI.Bussiness;
+using RayPI.Business;
 using RayPI.Domain.Entity;
 using RayPI.Infrastructure.Auth.Attributes;
 using RayPI.Infrastructure.Auth.Enums;

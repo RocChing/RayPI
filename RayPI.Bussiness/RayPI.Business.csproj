@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dto\**" />
+    <EmbeddedResource Remove="Dto\**" />
+    <None Remove="Dto\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RayPI.Domain\RayPI.Domain.csproj" />
     <ProjectReference Include="..\RayPI.Infrastructure.Treasury\RayPI.Infrastructure.Treasury.csproj" />
   </ItemGroup>
@@ -13,10 +19,6 @@
     <Reference Include="Microsoft.Extensions.PlatformAbstractions">
       <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.platformabstractions\1.1.0\lib\netstandard1.3\Microsoft.Extensions.PlatformAbstractions.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dto\" />
   </ItemGroup>
 
 </Project>
